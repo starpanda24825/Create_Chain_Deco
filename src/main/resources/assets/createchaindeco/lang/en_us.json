@@ -1,0 +1,13 @@
+{
+  "itemGroup.createchaindeco": "Example Mod Tab",
+  "block.createchaindeco.example_block": "Example Block",
+  "item.createchaindeco.example_item": "Example Item",
+
+  "createchaindeco.configuration.title": "Create: Chain Deco Configs",
+  "createchaindeco.configuration.section.createchaindeco.common.toml": "Create: Chain Deco Configs",
+  "createchaindeco.configuration.section.createchaindeco.common.toml.title": "Create: Chain Deco Configs",
+  "createchaindeco.configuration.items": "Item List",
+  "createchaindeco.configuration.logDirtBlock": "Log Dirt Block",
+  "createchaindeco.configuration.magicNumberIntroduction": "Magic Number Text",
+  "createchaindeco.configuration.magicNumber": "Magic Number"
+}
