@@ -4,6 +4,7 @@ import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteracti
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorShape;
 import com.starpanda.createchaindeco.CreateChainDeco;
 import com.starpanda.createchaindeco.network.SelectConveyorPositionPacket;
+import com.starpanda.createchaindeco.common.networking.packets.C2SPlaceDeco;
 
 import net.createmod.catnip.outliner.Outliner;
 import net.createmod.catnip.theme.Color;
@@ -57,16 +58,10 @@ public class ChainConveyorSelectionHandler {
 		Player player = event.getEntity();
 		if (player.level().isClientSide() && player.isHolding(Items.LANTERN)) {
 			if (ChainConveyorInteractionHandler.selectedLift != null) {
-				advanceSelection();
-
 				BlockPos liftPos = ChainConveyorInteractionHandler.selectedLift;
-				float chainPosition = ChainConveyorInteractionHandler.selectedChainPosition;
-				int linkIndex = Math.round(chainPosition);
-
-				if (liftPos != null) {
-					SelectConveyorPositionPacket packet = new SelectConveyorPositionPacket(liftPos, linkIndex);
-					PacketDistributor.sendToServer(packet);
-				}
+				int linkIndex = Math.round(ChainConveyorInteractionHandler.selectedChainPosition);
+				PacketDistributor.sendToServer(new C2SPlaceDeco(liftPos, linkIndex));
+				advanceSelection();
 			}
 		}
 	}
