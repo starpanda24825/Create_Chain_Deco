@@ -3,10 +3,12 @@ package com.starpanda.createchaindeco;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongTag;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -67,6 +69,46 @@ public class ModAttachments {
 						}
 					});
 					return copy;
+				}
+			})
+			.build());
+
+	public static final Supplier<AttachmentType<Int2ObjectMap<Long>>> CHAIN_LIGHT_POSITIONS =
+		ATTACHMENT_TYPES.register("chain_light_positions", () -> AttachmentType
+			.builder((Supplier<Int2ObjectMap<Long>>) () -> new Int2ObjectOpenHashMap<>())
+			.serialize(new IAttachmentSerializer<ListTag, Int2ObjectMap<Long>>() {
+				// Encode: map -> ListTag of CompoundTag { index: int, pos: long }
+				@Override
+				public ListTag write(Int2ObjectMap<Long> map, HolderLookup.Provider provider) {
+					ListTag list = new ListTag();
+					map.forEach((index, packedPos) -> {
+						if (packedPos != null) {
+							CompoundTag entry = new CompoundTag();
+							entry.put("index", IntTag.valueOf(index));
+							entry.put("pos", LongTag.valueOf(packedPos));
+							list.add(entry);
+						}
+					});
+					return list;
+				}
+
+				// Decode: ListTag -> map
+				@Override
+				public Int2ObjectMap<Long> read(IAttachmentHolder holder, ListTag tag, HolderLookup.Provider provider) {
+					Int2ObjectMap<Long> map = new Int2ObjectOpenHashMap<>();
+					for (int i = 0; i < tag.size(); i++) {
+						CompoundTag entry = tag.getCompound(i);
+						int index = entry.getInt("index");
+						long packedPos = entry.getLong("pos");
+						map.put(index, Long.valueOf(packedPos));
+					}
+					return map;
+				}
+			})
+			.copyHandler(new IAttachmentCopyHandler<Int2ObjectMap<Long>>() {
+				@Override
+				public Int2ObjectMap<Long> copy(Int2ObjectMap<Long> original, IAttachmentHolder holder, HolderLookup.Provider provider) {
+					return new Int2ObjectOpenHashMap<>(original);
 				}
 			})
 			.build());

@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "createchaindeco:block/chain_light" }
+  }
+}
