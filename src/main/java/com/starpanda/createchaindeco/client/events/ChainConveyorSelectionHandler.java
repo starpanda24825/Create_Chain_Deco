@@ -3,6 +3,7 @@ package com.starpanda.createchaindeco.client.events;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorShape;
 import com.starpanda.createchaindeco.CreateChainDeco;
+import com.starpanda.createchaindeco.network.SelectConveyorPositionPacket;
 
 import net.createmod.catnip.outliner.Outliner;
 import net.createmod.catnip.theme.Color;
@@ -21,6 +22,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = CreateChainDeco.MODID, value = Dist.CLIENT)
 public class ChainConveyorSelectionHandler {
@@ -56,6 +58,15 @@ public class ChainConveyorSelectionHandler {
 		if (player.level().isClientSide() && player.isHolding(Items.LANTERN)) {
 			if (ChainConveyorInteractionHandler.selectedLift != null) {
 				advanceSelection();
+
+				BlockPos liftPos = ChainConveyorInteractionHandler.selectedLift;
+				float chainPosition = ChainConveyorInteractionHandler.selectedChainPosition;
+				int linkIndex = Math.round(chainPosition);
+
+				if (liftPos != null) {
+					SelectConveyorPositionPacket packet = new SelectConveyorPositionPacket(liftPos, linkIndex);
+					PacketDistributor.sendToServer(packet);
+				}
 			}
 		}
 	}
