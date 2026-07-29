@@ -16,6 +16,7 @@ public class CreateChainDecoClient {
 	public CreateChainDecoClient(ModContainer container) {
 		container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 		NeoForge.EVENT_BUS.register(ChainConveyorSelectionHandler.class);
+		NeoForge.EVENT_BUS.register(ChainDecoRenderer.class);
 	}
 
 	@SubscribeEvent
