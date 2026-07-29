@@ -1,4 +1,4 @@
-package com.starpanda.createchaindeco;
+package com.starpanda.createchaindeco.registry.block;
 
 import java.util.List;
 

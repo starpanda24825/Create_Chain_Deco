@@ -1,7 +1,10 @@
-package com.starpanda.createchaindeco;
+package com.starpanda.createchaindeco.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
+import com.starpanda.createchaindeco.CreateChainDeco;
+import com.starpanda.createchaindeco.ModAttachments;
+import com.starpanda.createchaindeco.common.ChainLinkPositionHelper;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 

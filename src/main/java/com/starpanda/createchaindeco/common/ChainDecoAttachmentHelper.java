@@ -1,6 +1,7 @@
-package com.starpanda.createchaindeco;
+package com.starpanda.createchaindeco.common;
 
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
+import com.starpanda.createchaindeco.ModAttachments;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 

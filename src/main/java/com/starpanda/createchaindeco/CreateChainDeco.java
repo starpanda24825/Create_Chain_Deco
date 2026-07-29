@@ -3,6 +3,7 @@ package com.starpanda.createchaindeco;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
+import com.starpanda.createchaindeco.config.Config;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;

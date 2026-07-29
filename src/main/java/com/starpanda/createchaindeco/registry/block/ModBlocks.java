@@ -1,4 +1,6 @@
-package com.starpanda.createchaindeco;
+package com.starpanda.createchaindeco.registry.block;
+
+import com.starpanda.createchaindeco.CreateChainDeco;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;

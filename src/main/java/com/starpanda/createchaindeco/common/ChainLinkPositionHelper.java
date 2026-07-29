@@ -1,4 +1,4 @@
-package com.starpanda.createchaindeco;
+package com.starpanda.createchaindeco.common;
 
 import java.util.ArrayList;
 import java.util.List;

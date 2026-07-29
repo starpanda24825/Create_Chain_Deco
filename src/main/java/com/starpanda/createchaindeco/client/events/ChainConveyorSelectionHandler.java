@@ -1,7 +1,8 @@
-package com.starpanda.createchaindeco;
+package com.starpanda.createchaindeco.client.events;
 
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorShape;
+import com.starpanda.createchaindeco.CreateChainDeco;
 
 import net.createmod.catnip.outliner.Outliner;
 import net.createmod.catnip.theme.Color;
