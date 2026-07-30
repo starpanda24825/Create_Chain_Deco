@@ -52,29 +52,6 @@ public class ChainConveyorSelectionHandler {
 		return mc.player.isHolding(Items.LANTERN);
 	}
 
-	@SubscribeEvent
-	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-		Player player = event.getEntity();
-		if (player.level().isClientSide() && player.isHolding(Items.LANTERN)) {
-			if (ChainConveyorInteractionHandler.selectedLift != null) {
-				BlockPos liftPos = ChainConveyorInteractionHandler.selectedLift;
-				int linkIndex = Math.round(ChainConveyorInteractionHandler.selectedChainPosition);
-				PacketDistributor.sendToServer(new C2SPlaceDeco(liftPos, linkIndex));
-				advanceSelection();
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-		Player player = event.getEntity();
-		if (player.level().isClientSide() && player.isHolding(Items.LANTERN)) {
-			if (ChainConveyorInteractionHandler.selectedLift != null) {
-				advanceSelection();
-			}
-		}
-	}
-
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
 		Minecraft mc = Minecraft.getInstance();
@@ -82,11 +59,21 @@ public class ChainConveyorSelectionHandler {
 			return;
 		}
 
+		if (ChainConveyorInteractionHandler.selectedLift == null) {
+			return;
+		}
+
 		KeyMapping key = event.getKeyMapping();
-		if (key == mc.options.keyUse || key == mc.options.keyAttack) {
-			if (ChainConveyorInteractionHandler.selectedLift != null) {
-				event.setCanceled(true);
-			}
+
+		if (key == mc.options.keyUse) {
+			BlockPos liftPos = ChainConveyorInteractionHandler.selectedLift;
+			int linkIndex = Math.round(ChainConveyorInteractionHandler.selectedChainPosition);
+			PacketDistributor.sendToServer(new C2SPlaceDeco(liftPos, linkIndex));
+			advanceSelection();
+			event.setCanceled(true);
+		} else if (key == mc.options.keyAttack) {
+			advanceSelection();
+			event.setCanceled(true);
 		}
 	}
 
