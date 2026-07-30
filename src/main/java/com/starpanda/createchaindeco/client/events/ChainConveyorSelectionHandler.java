@@ -3,7 +3,6 @@ package com.starpanda.createchaindeco.client.events;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorShape;
 import com.starpanda.createchaindeco.CreateChainDeco;
-import com.starpanda.createchaindeco.network.SelectConveyorPositionPacket;
 import com.starpanda.createchaindeco.common.networking.packets.C2SPlaceDeco;
 
 import net.createmod.catnip.outliner.Outliner;
