@@ -68,7 +68,9 @@ public class ChainConveyorSelectionHandler {
 		if (key == mc.options.keyUse) {
 			BlockPos liftPos = ChainConveyorInteractionHandler.selectedLift;
 			int linkIndex = Math.round(ChainConveyorInteractionHandler.selectedChainPosition);
-			PacketDistributor.sendToServer(new C2SPlaceDeco(liftPos, linkIndex));
+			CreateChainDeco.LOGGER.info("Sending PlaceDeco packet - liftPos: {}, linkIndex: {}, selectedChainPosition: {}", 
+    		liftPos, linkIndex, ChainConveyorInteractionHandler.selectedChainPosition);
+			PacketDistributor.sendToServer(new C2SPlaceDeco(liftPos, linkIndex, mc.player.getMainHandItem().copy()));
 			advanceSelection();
 			event.setCanceled(true);
 		} else if (key == mc.options.keyAttack) {

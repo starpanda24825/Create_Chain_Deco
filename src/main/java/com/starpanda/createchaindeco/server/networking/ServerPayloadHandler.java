@@ -1,6 +1,7 @@
 package com.starpanda.createchaindeco.server.networking;
 
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
+import com.starpanda.createchaindeco.CreateChainDeco;
 import com.starpanda.createchaindeco.common.ChainDecoAttachmentHelper;
 import com.starpanda.createchaindeco.common.ChainDecoLightHelper;
 import com.starpanda.createchaindeco.common.ChainLinkPositionHelper;
@@ -27,6 +28,9 @@ public class ServerPayloadHandler {
             BlockEntity be = player.level().getBlockEntity(liftPos);
             if (!(be instanceof ChainConveyorBlockEntity conveyor)) return;
 
+            CreateChainDeco.LOGGER.info("Server received PlaceDeco - liftPos: {}, linkIndex: {}, stack: {}", 
+            packet.liftPos(), packet.linkIndex(), packet.stack());
+
             ItemStack stack = player.getMainHandItem().copy();
             if (stack.isEmpty()) return;
 
@@ -34,10 +38,14 @@ public class ServerPayloadHandler {
 
             ChainDecoAttachmentHelper.setDecoration(conveyor, linkIndex, stack);
 
+            CreateChainDeco.LOGGER.info("Decoration set on server, sending sync packet to client");
+
             Vec3 worldPos = ChainLinkPositionHelper.getLinkPosition(player.level(), liftPos, linkIndex);
             if (worldPos != null) {
                 ChainDecoLightHelper.placeLight(player.level(), conveyor, linkIndex, worldPos);
             }
+
+            PacketDistributor.sendToPlayer(player, new S2CUpdateDeco(liftPos, linkIndex, stack));
 
             // Send sync packet to all clients tracking this chunk
             PacketDistributor.sendToPlayersTrackingChunk(

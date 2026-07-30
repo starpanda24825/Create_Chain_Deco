@@ -78,6 +78,7 @@ public class ChainDecoRenderer {
 						ItemStack stack = entry.getValue();
 
 						Vec3 worldPos = ChainLinkPositionHelper.getLinkPosition(level, conveyor.getBlockPos(), linkIndex);
+						CreateChainDeco.LOGGER.info("Rendering deco - linkIndex: {}, worldPos: {}", linkIndex, worldPos);
 						if (worldPos == null) {
 							continue;
 						}
