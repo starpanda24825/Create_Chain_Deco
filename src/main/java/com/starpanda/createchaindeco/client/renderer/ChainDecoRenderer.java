@@ -84,7 +84,11 @@ public class ChainDecoRenderer {
 						}
 
 						poseStack.pushPose();
-						poseStack.translate(worldPos.x - cameraPos.x, worldPos.y - cameraPos.y - 1.0, worldPos.z - cameraPos.z);
+						poseStack.translate(
+							worldPos.x - cameraPos.x - 0.5,
+							worldPos.y - cameraPos.y - 1.0,
+							worldPos.z - cameraPos.z - 0.5
+						);
 						blockRenderer.renderSingleBlock(lanternState, poseStack, bufferSource, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY);
 						poseStack.popPose();
 					}

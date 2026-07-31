@@ -3,13 +3,12 @@ package com.starpanda.createchaindeco.common.networking.packets;
 import com.starpanda.createchaindeco.CreateChainDeco;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 
-public record C2SPlaceDeco(BlockPos liftPos, int linkIndex, ItemStack stack) implements CustomPacketPayload {
+public record C2SPlaceDeco(BlockPos liftPos, int linkIndex) implements CustomPacketPayload {
+
     public static final CustomPacketPayload.Type<C2SPlaceDeco> TYPE = new CustomPacketPayload.Type<>(
             ResourceLocation.fromNamespaceAndPath(CreateChainDeco.MODID, "place_deco"));
 
@@ -17,8 +16,7 @@ public record C2SPlaceDeco(BlockPos liftPos, int linkIndex, ItemStack stack) imp
             C2SPlaceDeco::write, C2SPlaceDeco::read);
 
     public static C2SPlaceDeco read(FriendlyByteBuf buf) {
-        ItemStack stack = ItemStack.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
-        return new C2SPlaceDeco(buf.readBlockPos(), buf.readInt(), stack);
+        return new C2SPlaceDeco(buf.readBlockPos(), buf.readInt());
     }
 
     public void write(FriendlyByteBuf buf) {
@@ -30,5 +28,4 @@ public record C2SPlaceDeco(BlockPos liftPos, int linkIndex, ItemStack stack) imp
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
-
 }

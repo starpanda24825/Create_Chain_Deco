@@ -28,26 +28,25 @@ public class ServerPayloadHandler {
             BlockEntity be = player.level().getBlockEntity(liftPos);
             if (!(be instanceof ChainConveyorBlockEntity conveyor)) return;
 
-            CreateChainDeco.LOGGER.info("Server received PlaceDeco - liftPos: {}, linkIndex: {}, stack: {}", 
-            packet.liftPos(), packet.linkIndex(), packet.stack());
-
             ItemStack stack = player.getMainHandItem().copy();
             if (stack.isEmpty()) return;
 
             int linkIndex = packet.linkIndex();
 
-            ChainDecoAttachmentHelper.setDecoration(conveyor, linkIndex, stack);
+            CreateChainDeco.LOGGER.info("Server received PlaceDeco - liftPos: {}, linkIndex: {}", 
+                liftPos, linkIndex);
 
-            CreateChainDeco.LOGGER.info("Decoration set on server, sending sync packet to client");
+            ChainDecoAttachmentHelper.setDecoration(conveyor, linkIndex, stack);
 
             Vec3 worldPos = ChainLinkPositionHelper.getLinkPosition(player.level(), liftPos, linkIndex);
             if (worldPos != null) {
                 ChainDecoLightHelper.placeLight(player.level(), conveyor, linkIndex, worldPos);
             }
 
-            PacketDistributor.sendToPlayer(player, new S2CUpdateDeco(liftPos, linkIndex, stack));
+            be.setChanged();
+            player.level().sendBlockUpdated(liftPos, conveyor.getBlockState(), conveyor.getBlockState(), 3);
 
-            // Send sync packet to all clients tracking this chunk
+            PacketDistributor.sendToPlayer(player, new S2CUpdateDeco(liftPos, linkIndex, stack));
             PacketDistributor.sendToPlayersTrackingChunk(
                 (ServerLevel) player.level(),
                 player.level().getChunkAt(liftPos).getPos(),
