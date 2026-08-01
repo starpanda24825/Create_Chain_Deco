@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public record S2CUpdateDeco(BlockPos liftPos, int linkIndex, ItemStack stack) implements CustomPacketPayload {
+public record S2CUpdateDeco(BlockPos liftPos, int linkIndex, ItemStack stack, double px, double py, double pz) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<S2CUpdateDeco> TYPE = new CustomPacketPayload.Type<>(
             ResourceLocation.fromNamespaceAndPath(CreateChainDeco.MODID, "update_deco"));
@@ -20,13 +20,19 @@ public record S2CUpdateDeco(BlockPos liftPos, int linkIndex, ItemStack stack) im
         BlockPos liftPos = buf.readBlockPos();
         int linkIndex = buf.readInt();
         ItemStack stack = ItemStack.STREAM_CODEC.decode(buf);
-        return new S2CUpdateDeco(liftPos, linkIndex, stack);
+        double px = buf.readDouble();
+        double py = buf.readDouble();
+        double pz = buf.readDouble();
+        return new S2CUpdateDeco(liftPos, linkIndex, stack, px, py, pz);
     }
 
     public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.liftPos);
         buf.writeInt(this.linkIndex);
         ItemStack.STREAM_CODEC.encode(buf, this.stack);
+        buf.writeDouble(this.px);
+        buf.writeDouble(this.py);
+        buf.writeDouble(this.pz);
     }
 
     @Override

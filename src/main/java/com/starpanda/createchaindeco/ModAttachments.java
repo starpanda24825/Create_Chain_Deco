@@ -112,4 +112,47 @@ public class ModAttachments {
 				}
 			})
 			.build());
+
+			public static final Supplier<AttachmentType<Int2ObjectMap<double[]>>> CHAIN_RENDER_POSITIONS =
+		ATTACHMENT_TYPES.register("chain_render_positions", () -> AttachmentType
+			.builder((Supplier<Int2ObjectMap<double[]>>) () -> new Int2ObjectOpenHashMap<>())
+			.serialize(new IAttachmentSerializer<ListTag, Int2ObjectMap<double[]>>() {
+				@Override
+				public ListTag write(Int2ObjectMap<double[]> map, HolderLookup.Provider provider) {
+					ListTag list = new ListTag();
+					map.forEach((index, pos) -> {
+						if (pos != null && pos.length == 3) {
+							CompoundTag entry = new CompoundTag();
+							entry.put("index", IntTag.valueOf(index));
+							entry.putDouble("x", pos[0]);
+							entry.putDouble("y", pos[1]);
+							entry.putDouble("z", pos[2]);
+							list.add(entry);
+						}
+					});
+					return list;
+				}
+
+				@Override
+				public Int2ObjectMap<double[]> read(IAttachmentHolder holder, ListTag tag, HolderLookup.Provider provider) {
+					Int2ObjectMap<double[]> map = new Int2ObjectOpenHashMap<>();
+					for (int i = 0; i < tag.size(); i++) {
+						CompoundTag entry = tag.getCompound(i);
+						int index = entry.getInt("index");
+						map.put(index, new double[]{
+							entry.getDouble("x"),
+							entry.getDouble("y"),
+							entry.getDouble("z")
+						});
+					}
+					return map;
+				}
+			})
+			.copyHandler(new IAttachmentCopyHandler<Int2ObjectMap<double[]>>() {
+				@Override
+				public Int2ObjectMap<double[]> copy(Int2ObjectMap<double[]> original, IAttachmentHolder holder, HolderLookup.Provider provider) {
+					return new Int2ObjectOpenHashMap<>(original);
+				}
+			})
+			.build());
 }

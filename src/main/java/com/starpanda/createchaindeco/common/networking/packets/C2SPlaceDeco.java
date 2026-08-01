@@ -7,7 +7,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public record C2SPlaceDeco(BlockPos liftPos, int linkIndex) implements CustomPacketPayload {
+public record C2SPlaceDeco(BlockPos liftPos, int linkIndex, double px, double py, double pz) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<C2SPlaceDeco> TYPE = new CustomPacketPayload.Type<>(
             ResourceLocation.fromNamespaceAndPath(CreateChainDeco.MODID, "place_deco"));
@@ -16,12 +16,21 @@ public record C2SPlaceDeco(BlockPos liftPos, int linkIndex) implements CustomPac
             C2SPlaceDeco::write, C2SPlaceDeco::read);
 
     public static C2SPlaceDeco read(FriendlyByteBuf buf) {
-        return new C2SPlaceDeco(buf.readBlockPos(), buf.readInt());
+        return new C2SPlaceDeco(
+            buf.readBlockPos(),
+            buf.readInt(),
+            buf.readDouble(),
+            buf.readDouble(),
+            buf.readDouble()
+        );
     }
 
     public void write(FriendlyByteBuf buf) {
         buf.writeBlockPos(this.liftPos);
         buf.writeInt(this.linkIndex);
+        buf.writeDouble(this.px);
+        buf.writeDouble(this.py);
+        buf.writeDouble(this.pz);
     }
 
     @Override

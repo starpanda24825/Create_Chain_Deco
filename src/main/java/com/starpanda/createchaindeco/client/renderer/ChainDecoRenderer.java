@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
 import com.starpanda.createchaindeco.CreateChainDeco;
 import com.starpanda.createchaindeco.ModAttachments;
-import com.starpanda.createchaindeco.common.ChainLinkPositionHelper;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
@@ -77,11 +76,11 @@ public class ChainDecoRenderer {
 						int linkIndex = entry.getIntKey();
 						ItemStack stack = entry.getValue();
 
-						Vec3 worldPos = ChainLinkPositionHelper.getLinkPosition(level, conveyor.getBlockPos(), linkIndex);
-						CreateChainDeco.LOGGER.info("Rendering deco - linkIndex: {}, worldPos: {}", linkIndex, worldPos);
-						if (worldPos == null) {
-							continue;
-						}
+						Int2ObjectMap<double[]> positions = conveyor.getData(ModAttachments.CHAIN_RENDER_POSITIONS);
+						double[] pos = positions.get(linkIndex);
+						if (pos == null) continue;
+
+						Vec3 worldPos = new Vec3(pos[0], pos[1], pos[2]);
 
 						poseStack.pushPose();
 						poseStack.translate(

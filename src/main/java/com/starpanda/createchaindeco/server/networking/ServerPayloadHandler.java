@@ -2,6 +2,7 @@ package com.starpanda.createchaindeco.server.networking;
 
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
 import com.starpanda.createchaindeco.CreateChainDeco;
+import com.starpanda.createchaindeco.ModAttachments;
 import com.starpanda.createchaindeco.common.ChainDecoAttachmentHelper;
 import com.starpanda.createchaindeco.common.ChainDecoLightHelper;
 import com.starpanda.createchaindeco.common.ChainLinkPositionHelper;
@@ -32,25 +33,30 @@ public class ServerPayloadHandler {
             if (stack.isEmpty()) return;
 
             int linkIndex = packet.linkIndex();
+            double px = packet.px();
+            double py = packet.py();
+            double pz = packet.pz();
 
-            CreateChainDeco.LOGGER.info("Server received PlaceDeco - liftPos: {}, linkIndex: {}", 
-                liftPos, linkIndex);
+            CreateChainDeco.LOGGER.info("Server received PlaceDeco - liftPos: {}, linkIndex: {}", liftPos, linkIndex);
 
             ChainDecoAttachmentHelper.setDecoration(conveyor, linkIndex, stack);
 
-            Vec3 worldPos = ChainLinkPositionHelper.getLinkPosition(player.level(), liftPos, linkIndex);
-            if (worldPos != null) {
-                ChainDecoLightHelper.placeLight(player.level(), conveyor, linkIndex, worldPos);
-            }
+            // Store the exact render position
+            conveyor.getData(ModAttachments.CHAIN_RENDER_POSITIONS).put(linkIndex, new double[]{px, py, pz});
+
+            // Place light block near the decoration
+            Vec3 worldPos = new Vec3(px, py, pz);
+            ChainDecoLightHelper.placeLight(player.level(), conveyor, linkIndex, worldPos);
 
             be.setChanged();
             player.level().sendBlockUpdated(liftPos, conveyor.getBlockState(), conveyor.getBlockState(), 3);
 
-            PacketDistributor.sendToPlayer(player, new S2CUpdateDeco(liftPos, linkIndex, stack));
+            S2CUpdateDeco syncPacket = new S2CUpdateDeco(liftPos, linkIndex, stack, px, py, pz);
+            PacketDistributor.sendToPlayer(player, syncPacket);
             PacketDistributor.sendToPlayersTrackingChunk(
                 (ServerLevel) player.level(),
                 player.level().getChunkAt(liftPos).getPos(),
-                new S2CUpdateDeco(liftPos, linkIndex, stack)
+                syncPacket
             );
         });
     }
